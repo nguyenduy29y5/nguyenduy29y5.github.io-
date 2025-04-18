@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nguyễn Đức Duy - Anh Yêu Tất Cả Các Em</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      background: black;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .neon-card {
+      z-index: 1;
+      border: 3px solid rgba(0,255,255,0.4);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0,255,255,0.6), 0 0 100px rgba(255,0,200,0.5) inset;
+      text-align: center;
+      transform: perspective(800px) rotateX(10deg) rotateY(-10deg);
+      animation: glow 4s ease-in-out infinite alternate, floaty 6s ease-in-out infinite;
+      transition: all 0.5s ease;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .neon-card:hover {
+      transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1.05);
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #00f0ff;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 20px #00f0ff, 0 0 50px #ff00c8;
+      background: url('https://your-image-url.png') no-repeat center/cover;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin: 0 0 20px;
+      color: #0ff;
+      text-shadow: 0 0 25px #0ff, 0 0 40px #ff00c8;
+      animation: flicker 2s infinite alternate;
+    }
+
+    p {
+      font-size: 22px;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+      margin: 10px 0;
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 30px rgba(0,255,255,0.5), 0 0 60px rgba(255,0,200,0.4) inset; }
+      100% { box-shadow: 0 0 60px rgba(255,0,200,0.8), 0 0 120px rgba(0,255,255,0.7) inset; }
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: perspective(800px) rotateX(10deg) rotateY(-10deg) translateY(0); }
+      50% { transform: perspective(800px) rotateX(5deg) rotateY(-5deg) translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="neon-card">
+  <div class="avatar"></div>
+  <h1>Nguyễn Đức Duy</h1>
+  <p><strong>Anh Yêu Tất Cả Các Em</strong></p>
+</div>
+
+<audio id="sound" src="https://freesound.org/data/previews/331/331912_3248244-lq.mp3"></audio>
+
+<script>
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  const letters = 'アァイィウエオカサタナハマヤラワ0123456789'.split('');
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0F0';
+    ctx.font = `${fontSize}px monospace`;
+
+    drops.forEach((y, index) => {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, index * fontSize, y * fontSize);
+      if (y * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[index] = 0;
+      }
+      drops[index]++;
+    });
+  }
+
+  setInterval(drawMatrix, 35);
+
+  window.onload = () => {
+    const audio = document.getElementById('sound');
+    audio.play().catch(() => {
+      console.log('Trình duyệt chặn tự động phát, click để nghe!');
+    });
+  };
+</script>
+
+</body>
+</html>
